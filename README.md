@@ -34,19 +34,19 @@ All services are exposed to the internet without opening a single port on the ro
 
 ```
                         ┌─────────────────────────────────┐
-                        │        Cloudflare Edge           │
-                        │  (DDoS protection, TLS, DNS)     │
+                        │        Cloudflare Edge          │
+                        │  (DDoS protection, TLS, DNS)    │
                         └────────────────┬────────────────┘
                                          │ HTTPS
                         ┌────────────────▼────────────────┐
-                        │         cloudflared              │
-                        │    (Zero Trust tunnel daemon)    │
+                        │         cloudflared             │
+                        │    (Zero Trust tunnel daemon)   │
                         └──┬──────┬──────┬──────┬─────────┘
                            │      │      │      │
                ┌───────────▼─┐ ┌──▼──┐ ┌▼────┐ ┌▼──────────┐
-               │  Portfolio  │ │ NC  │ │ GF  │ │    SSH     │
-               │  :8081      │ │8082 │ │3000 │ │   :22      │
-               └─────────────┘ └─────┘ └─────┘ └────────────┘
+               │  Portfolio  │ │ NC  │ │ GF  │ │    SSH    │
+               │  :8081      │ │8082 │ │3000 │ │   :22     │
+               └─────────────┘ └─────┘ └─────┘ └───────────┘
 
 NC = Nextcloud    GF = Grafana
 ```
@@ -83,46 +83,46 @@ A three-layer logging pipeline collects logs from every part of the system autom
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                    Fluent Bit                        │
-│                                                      │
+│                    Fluent Bit                       │
+│                                                     │
 │  [INPUT: forward]     ← Docker containers (fluentd  │
 │                         logging driver on :24224)   │
-│                                                      │
-│  [INPUT: systemd]     ← systemd journal              │
+│                                                     │
+│  [INPUT: systemd]     ← systemd journal             │
 │                         (SSH, cloudflared, kernel)  │
-│                                                      │
+│                                                     │
 │  [FILTER: grep]       ← excludes fluent-bit self-   │
 │                         logs to prevent feedback    │
-│                                                      │
-│  [FILTER: record_modifier] ← injects host=forge,   │
-│                               environment=homelab  │
-│                                                      │
+│                                                     │
+│  [FILTER: record_modifier] ← injects host=forge,    │
+│                               environment=homelab   │
+│                                                     │
 │  [OUTPUT: loki]       → ships to Loki on :3100      │
 └─────────────────────────────────────────────────────┘
                               │
                     ┌─────────▼──────────┐
-                    │        Loki         │
-                    │                     │
-                    │  Labels indexed:    │
+                    │        Loki        │
+                    │                    │
+                    │  Labels indexed:   │
                     │  - container_name  │
                     │  - SYSLOG_IDENTIFIER│
                     │  - job             │
                     │  - host            │
-                    │                     │
-                    │  Storage:           │
-                    │  /data/loki/chunks  │
-                    │  (retained forever) │
+                    │                    │
+                    │  Storage:          │
+                    │  /data/loki/chunks │
+                    │  (retained forever)│
                     └─────────┬──────────┘
                               │
                     ┌─────────▼──────────┐
-                    │       Grafana       │
-                    │                     │
-                    │  Dashboards:        │
+                    │       Grafana      │
+                    │                    │
+                    │  Dashboards:       │
                     │  - Log volume/svc  │
                     │  - SSH logins      │
                     │  - Error rate      │
                     │  - Tunnel health   │
-                    └─────────────────────┘
+                    └────────────────────┘
 ```
 
 **Docker logging driver** is configured globally in `/etc/docker/daemon.json` — every container automatically ships logs to Fluent Bit's forward input on `172.17.0.1:24224` without any per-container configuration.
@@ -178,7 +178,7 @@ Designed around the principle of separating **source code**, **deployment config
 ## Security
 
 | Layer | Implementation |
-|-------|---------------|
+|-------|----------------|
 | SSH | ed25519 keys only, password auth disabled, root login disabled |
 | Network exposure | Zero open inbound ports — Cloudflare tunnel is outbound-only |
 | DDoS protection | Cloudflare edge absorbs attacks before they reach the server |
