@@ -1,0 +1,8 @@
+services:
+  docs:
+    build:
+      context: /srv/rehoboam/repos/docs
+    container_name: docs
+    restart: unless-stopped
+    ports:
+      - "8083:80"
