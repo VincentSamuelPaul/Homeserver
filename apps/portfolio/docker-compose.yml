@@ -1,0 +1,8 @@
+services:
+  portfolio:
+    build:
+      context: /srv/rehoboam/repos/portfolio
+    container_name: portfolio
+    restart: unless-stopped
+    ports:
+      - "8081:80"

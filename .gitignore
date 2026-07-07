@@ -1,0 +1,11 @@
+# Secrets
+.env
+
+# Data directories
+/data/
+/backups/
+/logs/
+
+# Cloudflare credentials
+/infra/cloudflared/*.json
+/infra/cloudflared/*.pem
