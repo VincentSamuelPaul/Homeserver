@@ -332,4 +332,3 @@ The build context is `/srv/rehoboam/repos/portfolio` — source lives in `repos/
 ## License
 
 MIT
-EOF
