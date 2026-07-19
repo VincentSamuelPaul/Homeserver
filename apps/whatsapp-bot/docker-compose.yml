@@ -1,0 +1,15 @@
+services:
+  whatsapp-bot:
+    build:
+      context: /srv/rehoboam/repos/whatsapp-bot
+    container_name: whatsapp-bot
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - WHATSAPP_TOKEN=${WHATSAPP_TOKEN}
+      - WHATSAPP_PHONE_ID=${WHATSAPP_PHONE_ID}
+      - WHATSAPP_VERIFY_TOKEN=${WHATSAPP_VERIFY_TOKEN}
+      - NEXTCLOUD_URL=${NEXTCLOUD_URL}
+      - NEXTCLOUD_USER=${NEXTCLOUD_USER}
+      - NEXTCLOUD_PASSWORD=${NEXTCLOUD_PASSWORD}
